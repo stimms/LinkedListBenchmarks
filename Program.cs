@@ -10,11 +10,11 @@ namespace linkedlist
     {
         static void Main(string[] args)
         {
-            //var summary = BenchmarkRunner.Run<LinkedListAddTests>();
-            //var summary2 = BenchmarkRunner.Run<LinkedListAddWithRetainedTailTests>();
-            //var summary3 = BenchmarkRunner.Run<LinkedListRemoveTests>();
+            var summary = BenchmarkRunner.Run<LinkedListAddTests>();
+            var summary2 = BenchmarkRunner.Run<LinkedListAddWithRetainedTailTests>();
+            var summary3 = BenchmarkRunner.Run<LinkedListRemoveTests>();
             var summary4 = BenchmarkRunner.Run<LinkedListAddMiddleTests>();
-            //var summary = BenchmarkRunner.Run<LinkedListRandomAccessTests>();
+            var summary6 = BenchmarkRunner.Run<LinkedListRandomAccessTests>();
 
 
         }
@@ -33,23 +33,25 @@ namespace linkedlist
             }
         }
         [Benchmark]
-        public void LinkedList()
+        public LinkedList<int> LinkedList()
         {
             var list = new LinkedList<int>();
             foreach (var item in data)
             {
                 list.AddLast(item);
             }
+            return list;
         }
 
         [Benchmark]
-        public void List()
+        public List<int> List()
         {
             var list = new List<int>();
             foreach (var item in data)
             {
                 list.Add(item);
             }
+            return list;
         }
     }
 
@@ -66,7 +68,7 @@ namespace linkedlist
             }
         }
         [Benchmark]
-        public void LinkedList()
+        public LinkedList<int> LinkedList()
         {
             var list = new LinkedList<int>();
             LinkedListNode<int> currentNode = new LinkedListNode<int>(data[0]);
@@ -75,16 +77,18 @@ namespace linkedlist
             {
                 currentNode = list.AddAfter(currentNode, item);
             }
+            return list;
         }
 
         [Benchmark]
-        public void List()
+        public List<int> List()
         {
             var list = new List<int>();
             foreach (var item in data)
             {
                 list.Add(item);
             }
+            return list;
         }
     }
 
@@ -106,7 +110,7 @@ namespace linkedlist
 
         }
         [Benchmark]
-        public void LinkedList()
+        public int LinkedList()
         {
             var index = rand.Next(10_000);
             var currentNode = linkedlist_data.First;
@@ -115,13 +119,15 @@ namespace linkedlist
                 currentNode = currentNode.Next;
             }
             var result = currentNode.Value;
+            return result;
         }
 
         [Benchmark]
-        public void Array()
+        public int Array()
         {
             var index = rand.Next(10_000);
             var result = array_data[index];
+            return result;
         }
     }
 
@@ -142,7 +148,7 @@ namespace linkedlist
 
         }
         [Benchmark]
-        public void LinkedList()
+        public LinkedList<int> LinkedList()
         {
             var currentNode = linkedlist_data.First;
             for (int i = 0; i < 10_000 && currentNode != null && currentNode.Next != null; i++)
@@ -153,12 +159,14 @@ namespace linkedlist
                 }
                 currentNode = currentNode.Next;
             }
+            return linkedlist_data;
         }
 
         [Benchmark]
-        public void List()
+        public List<int> List()
         {
             var result = list_data.Where((item, index) => index % 2 == 0);
+            return result;
         }
     }
 
@@ -168,31 +176,35 @@ namespace linkedlist
         List<int> list_data;
         LinkedList<int> linkedlist_data;
         LinkedListNode<int> middle;
+        const int listLength = 1000;
         public LinkedListAddMiddleTests()
         {
             list_data = new List<int>();
             linkedlist_data = new LinkedList<int>();
-            for (int i = 0; i < 10_000; i++)
+            
+            for (int i = 0; i < listLength; i++)
             {
                 list_data.Add(rand.Next());
                 linkedlist_data.AddLast(rand.Next());
             }
             middle = linkedlist_data.First;
-            for (int i = 0; i < 10_000/2; i++)
+            for (int i = 0; i < listLength / 2; i++)
             {
                 middle = middle.Next;
             }
         }
         [Benchmark]
-        public void LinkedList()
+        public LinkedList<int> LinkedList()
         {
             linkedlist_data.AddAfter(middle, 77);
+            return linkedlist_data;
         }
 
         [Benchmark]
-        public void List()
+        public List<int> List()
         {
-            list_data.Insert(5000, 77);
+            list_data.Insert(listLength/2, 77);
+            return list_data;
         }
     }
 }
